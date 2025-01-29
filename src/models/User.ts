@@ -6,7 +6,7 @@ interface IUser {
   firstName: string;
   lastName: string;
   phone: string;
-  payment?: {
+  payment: {
     cardNumber: string;
     expiresAt: Date;
   };
@@ -45,14 +45,14 @@ schema
   .get(function (this: IUser) {
     return `${this.firstName} ${this.lastName}`;
   })
-  .set((value: string, virtual, doc) => {
+  .set((value: string, _virtual, doc) => {
     const [firstName, lastName] = value.split(" ");
     doc.firstName = firstName;
     doc.lastName = lastName;
   });
 
 schema.virtual("isPro").get(function () {
-  if (this.payment) {
+  if (this.payment.expiresAt) {
     const expriresAt = this.payment.expiresAt.getTime();
     return expriresAt > Date.now();
   }
